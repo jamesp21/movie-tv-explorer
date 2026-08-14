@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "movie-app": {
+    "movie-tv-explorer": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -70,10 +70,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "movie-app:build:production"
+              "buildTarget": "movie-tv-explorer:build:production"
             },
             "development": {
-              "buildTarget": "movie-app:build:development"
+              "buildTarget": "movie-tv-explorer:build:development"
             }
           },
           "defaultConfiguration": "development"
