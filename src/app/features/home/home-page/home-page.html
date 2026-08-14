@@ -1,1 +1,36 @@
-<p>home-page works!</p>
+<section class="home-page">
+  <header class="page-header">
+    <h1>Popular Movies</h1>
+    <p>Discover what's popular right now.</p>
+  </header>
+
+  @if (isLoading()) {
+    <p>Loading movies...</p>
+  }
+
+  @if (errorMessage()) {
+    <p>{{ errorMessage() }}</p>
+  }
+
+  @if (!isLoading() && !errorMessage()) {
+    <section class="movie-grid">
+      @for (movie of movies(); track movie.id) {
+        <article class="movie-card">
+          <h2>{{ movie.title }}</h2>
+
+          <p>
+            Rating: {{ movie.voteAverage }}
+          </p>
+
+          <p>
+            {{ movie.releaseDate }}
+          </p>
+
+          <p>
+            {{ movie.overview }}
+          </p>
+        </article>
+      }
+    </section>
+  }
+</section>
