@@ -3,10 +3,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { MovieApiService } from '../../../core/services/movie-api.service';
 import { Movie } from '../../../core/models/movie.model';
 
+import { MediaCard } from '../../../shared/components/media-card/media-card';
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [],
+  imports: [MediaCard],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss'
 })

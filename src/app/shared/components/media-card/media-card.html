@@ -1,1 +1,63 @@
-<p>media-card works!</p>
+<article class="media-card">
+
+  @if (movie(); as movie) {
+    <div class="media-card__content">
+
+      @if (movie.posterPath) {
+        <img
+          class="media-card__poster"
+          [src]="'https://image.tmdb.org/t/p/w500' + movie.posterPath"
+          [alt]="movie.title"
+        />
+      }
+
+      <div class="media-card__info">
+        <h2>{{ movie.title }}</h2>
+
+        <p class="media-card__rating">
+          ⭐ {{ movie.voteAverage.toFixed(1) }}
+        </p>
+
+        <p class="media-card__release">
+          {{ movie.releaseDate }}
+        </p>
+
+        <p class="media-card__overview">
+          {{ movie.overview }}
+        </p>
+      </div>
+
+    </div>
+  }
+
+  @if (tvShow(); as show) {
+    <div class="media-card__content">
+
+      @if (show.posterPath) {
+        <img
+          class="media-card__poster"
+          [src]="'https://image.tmdb.org/t/p/w500' + show.posterPath"
+          [alt]="show.name"
+        />
+      }
+
+      <div class="media-card__info">
+        <h2>{{ show.name }}</h2>
+
+        <p class="media-card__rating">
+          ⭐ {{ show.voteAverage.toFixed(1) }}
+        </p>
+
+        <p class="media-card__release">
+          {{ show.firstAirDate }}
+        </p>
+
+        <p class="media-card__overview">
+          {{ show.overview }}
+        </p>
+      </div>
+
+    </div>
+  }
+
+</article>
