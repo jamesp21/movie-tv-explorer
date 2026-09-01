@@ -4,11 +4,17 @@ import { MovieApiService } from '../../../core/services/movie-api.service';
 import { Movie } from '../../../core/models/movie.model';
 
 import { MediaCard } from '../../../shared/components/media-card/media-card';
+import { LoadingSpinner } from '../../../shared/components/loading-spinner/loading-spinner';
+import { ErrorMessage } from '../../../shared/components/error-message/error-message';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [MediaCard],
+  imports: [
+    MediaCard,
+    LoadingSpinner,
+    ErrorMessage
+  ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss'
 })
@@ -23,7 +29,8 @@ export class HomePage implements OnInit {
     this.loadPopularMovies();
   }
 
-  private loadPopularMovies(): void {
+
+   loadPopularMovies(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
 

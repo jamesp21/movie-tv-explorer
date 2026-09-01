@@ -1,21 +1,31 @@
 <section class="home-page">
   <header class="page-header">
     <h1>Popular Movies</h1>
-    <p>Discover what's popular right now.</p>
+
+    <p>
+      Discover what's popular right now.
+    </p>
   </header>
 
   @if (isLoading()) {
-    <p>Loading movies...</p>
+    <app-loading-spinner
+      message="Loading popular movies..."
+    />
   }
 
   @if (errorMessage()) {
-    <p>{{ errorMessage() }}</p>
+    <app-error-message
+      [message]="errorMessage()"
+      (retry)="loadPopularMovies()"
+    />
   }
 
   @if (!isLoading() && !errorMessage()) {
     <section class="movie-grid">
       @for (movie of movies(); track movie.id) {
-        <app-media-card [movie]="movie" />
+        <app-media-card
+          [movie]="movie"
+        />
       }
     </section>
   }

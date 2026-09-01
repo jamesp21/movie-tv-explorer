@@ -1,16 +1,15 @@
 import { Component, input } from '@angular/core';
 
 import { Movie } from '../../../core/models/movie.model';
-import { TVShow } from '../../../core/models/tv-show.model';
+import { PosterUrlPipe } from '../../pipes/poster-url.pipe';
 
 @Component({
   selector: 'app-media-card',
   standalone: true,
-  imports: [],
+  imports: [PosterUrlPipe],
   templateUrl: './media-card.html',
   styleUrl: './media-card.scss'
 })
 export class MediaCard {
-  readonly movie = input<Movie | null>(null);
-  readonly tvShow = input<TVShow | null>(null);
+  readonly movie = input.required<Movie>();
 }
