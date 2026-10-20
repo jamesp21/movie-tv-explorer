@@ -1,25 +1,26 @@
-<article class="media-card">
-
+<a
+  class="media-card"
+  [routerLink]="['/details', 'movie', movie().id]"
+  [attr.aria-label]="'View details for ' + movie().title"
+>
   <img
     class="media-card__poster"
     [src]="movie().posterPath | posterUrl"
     [alt]="movie().title"
+    loading="lazy"
   />
 
   <div class="media-card__info">
     <h2>{{ movie().title }}</h2>
 
-    <p class="media-card__rating">
-      ⭐ {{ movie().voteAverage.toFixed(1) }}
-    </p>
+    <p class="media-card__rating">⭐ {{ movie().voteAverage.toFixed(1) }}</p>
 
     <p class="media-card__release">
-      {{ movie().releaseDate }}
+      {{ movie().releaseDate || 'Release date unknown' }}
     </p>
 
     <p class="media-card__overview">
       {{ movie().overview }}
     </p>
   </div>
-
-</article>
+</a>

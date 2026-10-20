@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { MovieApiService } from '../../../core/services/movie-api.service';
 import { Movie } from '../../../core/models/movie.model';
@@ -12,17 +13,13 @@ import { SearchBar } from '../../../shared/components/search-bar/search-bar';
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [
-    MediaCard,
-    LoadingSpinner,
-    ErrorMessage,
-    SearchBar
-  ],
+  imports: [MediaCard, LoadingSpinner, ErrorMessage, SearchBar],
   templateUrl: './home-page.html',
-  styleUrl: './home-page.scss'
+  styleUrl: './home-page.scss',
 })
 export class HomePage implements OnInit {
   private readonly movieApiService = inject(MovieApiService);
+  private readonly router = inject(Router);
 
   readonly movies = signal<Movie[]>([]);
   readonly isLoading = signal(true);
@@ -33,29 +30,34 @@ export class HomePage implements OnInit {
   }
 
   onSearch(query: string): void {
-  console.log('SEARCH QUERY:', query);
-}
+    const trimmedQuery = query.trim();
 
+    if (!trimmedQuery) {
+      return;
+    }
 
-   loadPopularMovies(): void {
+    this.router.navigate(['/search'], {
+      queryParams: { q: trimmedQuery },
+    });
+  }
+
+  loadPopularMovies(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
     this.movieApiService.getPopularMovies().subscribe({
-      next: response => {
+      next: (response) => {
         this.movies.set(response.results);
         this.isLoading.set(false);
       },
 
-      error: error => {
+      error: (error) => {
         console.error('FAILED TO LOAD MOVIES:', error);
 
-        this.errorMessage.set(
-          'Unable to load movies. Please try again.'
-        );
+        this.errorMessage.set('Unable to load movies. Please try again.');
 
         this.isLoading.set(false);
-      }
+      },
     });
   }
 }

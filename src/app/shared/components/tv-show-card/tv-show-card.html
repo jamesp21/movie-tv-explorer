@@ -1,29 +1,34 @@
+<a
+  class="tv-show-card"
+  [routerLink]="['/details', 'tv', tvShow().id]"
+  [attr.aria-label]="'View details for ' + tvShow().name"
+>
+  <article class="tv-show-card">
+    <img
+      class="tv-show-card__poster"
+      [src]="tvShow().posterPath | posterUrl"
+      [alt]="tvShow().name"
+      loading="lazy"
+    />
 
-<article class="tv-show-card">
-  <img
-    class="tv-show-card__poster"
-    [src]="tvShow().posterPath | posterUrl"
-    [alt]="tvShow().name"
-    loading="lazy"
-  />
+    <div class="tv-show-card__info">
+      <h2 class="tv-show-card__title">
+        {{ tvShow().name }}
+      </h2>
 
-  <div class="tv-show-card__info">
-    <h2 class="tv-show-card__title">
-      {{ tvShow().name }}
-    </h2>
+      <p class="tv-show-card__rating">
+        ⭐ {{ tvShow().voteAverage.toFixed(1) }}
+        <span>({{ tvShow().voteCount }} votes)</span>
+      </p>
 
-    <p class="tv-show-card__rating">
-      ⭐ {{ tvShow().voteAverage.toFixed(1) }}
-      <span>({{ tvShow().voteCount }} votes)</span>
-    </p>
+      <p class="tv-show-card__release">
+        First aired:
+        {{ tvShow().firstAirDate || 'Unknown' }}
+      </p>
 
-    <p class="tv-show-card__release">
-      First aired:
-      {{ tvShow().firstAirDate || 'Unknown' }}
-    </p>
-
-    <p class="tv-show-card__overview">
-      {{ tvShow().overview || 'No overview available.' }}
-    </p>
-  </div>
-</article>
+      <p class="tv-show-card__overview">
+        {{ tvShow().overview || 'No overview available.' }}
+      </p>
+    </div>
+  </article>
+</a>

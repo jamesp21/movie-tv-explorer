@@ -3,7 +3,10 @@
   overflow: hidden;
   border-radius: 12px;
   background: #1c1c1c;
-  color: white;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
 
   &__content {
     height: 100%;
