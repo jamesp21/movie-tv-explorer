@@ -1,0 +1,27 @@
+
+<nav class="navbar" aria-label="Main navigation">
+  <a
+    class="navbar__brand"
+    routerLink="/"
+    aria-label="Movie Explorer home"
+  >
+    Movie Explorer
+  </a>
+
+  <div class="navbar__links">
+    <a
+      routerLink="/"
+      routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Home
+    </a>
+
+    <a
+      routerLink="/search"
+      routerLinkActive="navbar__link--active"
+    >
+      Search
+    </a>
+  </div>
+</nav>

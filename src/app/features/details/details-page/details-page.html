@@ -1,0 +1,89 @@
+
+<main class="details-page">
+  <button class="details-page__back" type="button" (click)="goBack()">
+    ← Back
+  </button>
+
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading details..." />
+  }
+
+  @if (errorMessage()) {
+    <app-error-message
+      [message]="errorMessage()"
+      (retry)="loadDetails()"
+    />
+  }
+
+  @if (details(); as item) {
+    <article class="details">
+      @if (item.backdropPath) {
+        <img
+          class="details__backdrop"
+          [src]="item.backdropPath | posterUrl: 'w1280'"
+          alt=""
+        />
+      }
+
+      <div class="details__content">
+        <img
+          class="details__poster"
+          [src]="item.posterPath | posterUrl"
+          [alt]="displayTitle()"
+        />
+
+        <div class="details__info">
+          <p class="details__type">
+            {{ mediaType() === 'movie' ? 'Movie' : 'TV Show' }}
+          </p>
+
+          <h1>{{ displayTitle() }}</h1>
+
+          <p class="details__rating">
+            ⭐ {{ item.voteAverage.toFixed(1) }} / 10
+            <span>({{ item.voteCount }} votes)</span>
+          </p>
+
+          <p>
+            {{ mediaType() === 'movie' ? 'Release date:' : 'First aired:' }}
+            {{ item.releaseDate || item.firstAirDate || 'Unknown' }}
+          </p>
+
+          @if (item.runtime) {
+            <p>Runtime: {{ item.runtime }} minutes</p>
+          }
+
+          @if (item.numberOfSeasons !== undefined) {
+            <p>Seasons: {{ item.numberOfSeasons }}</p>
+          }
+
+          @if (item.numberOfEpisodes !== undefined) {
+            <p>Episodes: {{ item.numberOfEpisodes }}</p>
+          }
+
+          @if (item.genres.length > 0) {
+            <div class="details__genres">
+              @for (genre of item.genres; track genre.id) {
+                <span>{{ genre.name }}</span>
+              }
+            </div>
+          }
+
+          <h2>Overview</h2>
+          <p class="details__overview">
+            {{ item.overview || 'No overview available.' }}
+          </p>
+
+          @if (item.productionCompanies.length > 0) {
+            <h2>Production companies</h2>
+            <ul>
+              @for (company of item.productionCompanies; track company.id) {
+                <li>{{ company.name }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </article>
+  }
+</main>

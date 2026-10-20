@@ -7,9 +7,7 @@
     </p>
   </header>
 
-  <app-search-bar
-  (search)="onSearch($event)"
-/>
+  <app-search-bar (searchSubmitted)="onSearch($event)" />
 
   @if (isLoading()) {
     <app-loading-spinner

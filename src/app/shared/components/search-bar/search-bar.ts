@@ -1,3 +1,4 @@
+
 import { Component, output, signal } from '@angular/core';
 
 @Component({
@@ -8,17 +9,19 @@ import { Component, output, signal } from '@angular/core';
   styleUrl: './search-bar.scss'
 })
 export class SearchBar {
-  readonly search = output<string>();
-
+  readonly searchSubmitted = output<string>();
   readonly query = signal('');
 
-  onSearch(): void {
+  onSearch(event?: Event): void {
+    console.log('Search value:', this.query(), 'Type:', typeof this.query());
+    event?.preventDefault();
+
     const trimmedQuery = this.query().trim();
 
     if (!trimmedQuery) {
       return;
     }
 
-    this.search.emit(trimmedQuery);
+    this.searchSubmitted.emit(trimmedQuery);
   }
 }

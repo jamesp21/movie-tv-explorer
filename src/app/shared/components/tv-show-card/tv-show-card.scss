@@ -1,0 +1,73 @@
+
+.tv-show-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: #222;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  }
+
+  &__poster {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    background: #eee;
+  }
+
+  &__info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.4;
+  }
+
+  &__rating,
+  &__release {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  &__rating span {
+    color: #666;
+    font-size: 0.75rem;
+  }
+
+  &__overview {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0;
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-show-card {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}

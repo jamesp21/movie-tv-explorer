@@ -1,0 +1,56 @@
+
+.search-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.search-page__header {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    opacity: 0.75;
+  }
+}
+
+.search-page__section {
+  margin-top: 2.5rem;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+}
+
+.search-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.search-page__tv-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.75rem;
+  }
+
+  h3 {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-page {
+    padding: 1rem;
+  }
+}

@@ -1,16 +1,11 @@
-<form
-  class="search-bar"
-  (submit)="onSearch(); $event.preventDefault()"
->
+
+<form class="search-bar" (submit)="onSearch($event)">
   <input
     type="search"
     placeholder="Search movies and TV shows..."
-    aria-label="Search movies and TV shows"
     [value]="query()"
     (input)="query.set($any($event.target).value)"
   />
 
-  <button type="submit">
-    Search
-  </button>
+  <button type="submit">Search</button>
 </form>
