@@ -7,6 +7,10 @@
     </p>
   </header>
 
+  <app-search-bar
+  (search)="onSearch($event)"
+/>
+
   @if (isLoading()) {
     <app-loading-spinner
       message="Loading popular movies..."

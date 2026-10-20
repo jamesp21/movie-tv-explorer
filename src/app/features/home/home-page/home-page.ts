@@ -7,13 +7,16 @@ import { MediaCard } from '../../../shared/components/media-card/media-card';
 import { LoadingSpinner } from '../../../shared/components/loading-spinner/loading-spinner';
 import { ErrorMessage } from '../../../shared/components/error-message/error-message';
 
+import { SearchBar } from '../../../shared/components/search-bar/search-bar';
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
   imports: [
     MediaCard,
     LoadingSpinner,
-    ErrorMessage
+    ErrorMessage,
+    SearchBar
   ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss'
@@ -28,6 +31,10 @@ export class HomePage implements OnInit {
   ngOnInit(): void {
     this.loadPopularMovies();
   }
+
+  onSearch(query: string): void {
+  console.log('SEARCH QUERY:', query);
+}
 
 
    loadPopularMovies(): void {
