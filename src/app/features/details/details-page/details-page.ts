@@ -1,6 +1,5 @@
-
 import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { switchMap, map, catchError, of } from 'rxjs';
 
@@ -13,9 +12,9 @@ import { ErrorMessage } from '../../../shared/components/error-message/error-mes
 @Component({
   selector: 'app-details-page',
   standalone: true,
-  imports: [RouterLink, PosterUrlPipe, LoadingSpinner, ErrorMessage],
+  imports: [PosterUrlPipe, LoadingSpinner, ErrorMessage],
   templateUrl: './details-page.html',
-  styleUrl: './details-page.scss'
+  styleUrl: './details-page.scss',
 })
 export class DetailsPage {
   private readonly route = inject(ActivatedRoute);
@@ -44,19 +43,15 @@ export class DetailsPage {
 
     this.route.paramMap
       .pipe(
-        map(params => ({
+        map((params) => ({
           type: params.get('type'),
-          id: Number(params.get('id'))
+          id: Number(params.get('id')),
         })),
         switchMap(({ type, id }) => {
-          if (
-            (type !== 'movie' && type !== 'tv') ||
-            !Number.isInteger(id) ||
-            id <= 0
-          ) {
+          if ((type !== 'movie' && type !== 'tv') || !Number.isInteger(id) || id <= 0) {
             return of({
               details: null,
-              error: 'Invalid movie or TV show URL.'
+              error: 'Invalid movie or TV show URL.',
             });
           }
 
@@ -68,18 +63,18 @@ export class DetailsPage {
               : this.movieApiService.getTvDetails(id);
 
           return request.pipe(
-            map(details => ({ details, error: '' })),
-            catchError(error => {
+            map((details) => ({ details, error: '' })),
+            catchError((error) => {
               console.error('FAILED TO LOAD DETAILS:', error);
               return of({
                 details: null,
-                error: 'Unable to load details. Please try again.'
+                error: 'Unable to load details. Please try again.',
               });
-            })
+            }),
           );
-        })
+        }),
       )
-      .subscribe(result => {
+      .subscribe((result) => {
         this.details.set(result.details);
         this.errorMessage.set(result.error);
         this.isLoading.set(false);

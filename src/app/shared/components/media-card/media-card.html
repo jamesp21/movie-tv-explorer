@@ -1,26 +1,50 @@
-<a
-  class="media-card"
-  [routerLink]="['/details', 'movie', movie().id]"
-  [attr.aria-label]="'View details for ' + movie().title"
->
-  <img
-    class="media-card__poster"
-    [src]="movie().posterPath | posterUrl"
-    [alt]="movie().title"
-    loading="lazy"
-  />
+<article class="media-card">
+  <a
+    class="media-card__link"
+    [routerLink]="['/details', 'movie', movie().id]"
+    [attr.aria-label]="'View details for ' + movie().title"
+  >
+    <img
+      class="media-card__poster"
+      [src]="movie().posterPath | posterUrl"
+      [alt]="movie().title"
+      loading="lazy"
+    />
 
-  <div class="media-card__info">
-    <h2>{{ movie().title }}</h2>
+    <div class="media-card__info">
+      <div class="media-card__heading">
+        <h2>{{ movie().title }}</h2>
+      </div>
 
-    <p class="media-card__rating">⭐ {{ movie().voteAverage.toFixed(1) }}</p>
+      <p class="media-card__rating">⭐ {{ movie().voteAverage.toFixed(1) }}</p>
 
-    <p class="media-card__release">
-      {{ movie().releaseDate || 'Release date unknown' }}
-    </p>
+      <p class="media-card__release">
+        {{ movie().releaseDate || 'Release date unknown' }}
+      </p>
 
-    <p class="media-card__overview">
-      {{ movie().overview }}
-    </p>
-  </div>
-</a>
+      <p class="media-card__overview">
+        {{ movie().overview }}
+      </p>
+    </div>
+  </a>
+
+  <button
+    type="button"
+    class="media-card__favorite"
+    [class.media-card__favorite--active]="isFavorite()"
+    [attr.aria-pressed]="isFavorite()"
+    [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+    (click)="toggleFavorite($event)"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"
+        [attr.fill]="isFavorite() ? 'currentColor' : 'none'"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+</article>

@@ -1,6 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Movie } from '../../../core/models/movie.model';
+import { FavoritesService } from '../../../core/services/favorites.service';
 import { PosterUrlPipe } from '../../pipes/poster-url.pipe';
 
 @Component({
@@ -12,4 +13,17 @@ import { PosterUrlPipe } from '../../pipes/poster-url.pipe';
 })
 export class MediaCard {
   readonly movie = input.required<Movie>();
+
+  readonly favoritesService = inject(FavoritesService);
+
+  isFavorite(): boolean {
+    return this.favoritesService.isFavorite(this.movie().id, 'movie');
+  }
+
+  toggleFavorite(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.favoritesService.toggleFavorite(this.movie());
+  }
 }

@@ -1,12 +1,18 @@
 .media-card {
+  position: relative;
   height: 100%;
   overflow: hidden;
   border-radius: 12px;
   background: #1c1c1c;
-  display: block;
   color: inherit;
-  text-decoration: none;
-  cursor: pointer;
+
+  &__link {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
   &__content {
     height: 100%;
@@ -23,7 +29,15 @@
     padding: 1rem;
   }
 
-  h2 {
+  &__heading {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-right: 2.75rem;
+  }
+
+  &__heading h2 {
+    min-width: 0;
     margin: 0 0 0.5rem;
     font-size: 1.1rem;
   }
@@ -43,8 +57,48 @@
     color: #ccc;
     line-height: 1.5;
     overflow: hidden;
-
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+
+  &__favorite {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 65%);
+    color: #fff;
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+
+    svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+    }
+
+    &:hover {
+      color: #e63946;
+      transform: scale(1.08);
+    }
+
+    &--active {
+      color: #e63946;
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+    }
   }
 }
