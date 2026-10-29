@@ -1,4 +1,3 @@
-
 <main class="search-page">
   <header class="search-page__header">
     <h1>Search Movies & TV Shows</h1>
@@ -12,40 +11,42 @@
   }
 
   @if (errorMessage()) {
-    <app-error-message
-  [message]="errorMessage()"
-  (retry)="onSearch(searchQuery())"
-/>
+    <app-error-message [message]="errorMessage()" (retry)="onSearch(searchQuery())" />
   }
 
   @if (hasSearched() && !isLoading() && !errorMessage()) {
-    <section class="search-page__section">
-      <h2>Movies</h2>
+    @if (movies().length === 0 && tvShows().length === 0) {
+      <p class="search-page__empty">
+        No movies or TV shows found for "{{ searchQuery() }}". Try a different search.
+      </p>
+    } @else {
+      <section class="search-page__section">
+        <h2>Movies</h2>
 
-      @if (movies().length > 0) {
-        <div class="search-page__grid">
-          @for (movie of movies(); track movie.id) {
-            <app-media-card [movie]="movie" />
-          }
-        </div>
-      } @else {
-        <p>No movies found for "{{ searchQuery() }}".</p>
-      }
-    </section>
+        @if (movies().length > 0) {
+          <div class="search-page__grid">
+            @for (movie of movies(); track movie.id) {
+              <app-media-card [movie]="movie" />
+            }
+          </div>
+        } @else {
+          <p>No movies found for "{{ searchQuery() }}".</p>
+        }
+      </section>
 
-    
-<section class="search-page__section">
-  <h2>TV Shows</h2>
+      <section class="search-page__section">
+        <h2>TV Shows</h2>
 
-  @if (tvShows().length > 0) {
-    <div class="search-page__grid">
-      @for (show of tvShows(); track show.id) {
-        <app-tv-show-card [tvShow]="show" />
-      }
-    </div>
-  } @else {
-    <p>No TV shows found for "{{ searchQuery() }}".</p>
-  }
-</section>
+        @if (tvShows().length > 0) {
+          <div class="search-page__grid">
+            @for (show of tvShows(); track show.id) {
+              <app-tv-show-card [tvShow]="show" />
+            }
+          </div>
+        } @else {
+          <p>No TV shows found for "{{ searchQuery() }}".</p>
+        }
+      </section>
+    }
   }
 </main>

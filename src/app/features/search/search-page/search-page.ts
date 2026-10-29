@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { MovieApiService } from '../../../core/services/movie-api.service';
@@ -59,17 +60,23 @@ export class SearchPage {
     this.movies.set([]);
     this.tvShows.set([]);
 
-    this.movieApiService.searchMulti(trimmedQuery).subscribe({
-      next: (response) => {
-        this.movies.set(response.movies);
-        this.tvShows.set(response.tvShows);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('SEARCH FAILED:', error);
-        this.errorMessage.set('Unable to search right now. Please try again.');
-        this.isLoading.set(false);
-      },
-    });
+    this.movieApiService
+      .searchMulti(trimmedQuery)
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false);
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.movies.set(response.movies);
+          this.tvShows.set(response.tvShows);
+        },
+
+        error: (error) => {
+          console.error('SEARCH FAILED:', error);
+          this.errorMessage.set('Unable to search right now. Please try again.');
+        },
+      });
   }
 }

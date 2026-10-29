@@ -2,33 +2,28 @@
   <header class="page-header">
     <h1>Popular Movies</h1>
 
-    <p>
-      Discover what's popular right now.
-    </p>
+    <p>Discover what's popular right now.</p>
   </header>
 
   <app-search-bar (searchSubmitted)="onSearch($event)" />
 
   @if (isLoading()) {
-    <app-loading-spinner
-      message="Loading popular movies..."
-    />
+    <app-loading-spinner message="Loading popular movies..." />
   }
 
   @if (errorMessage()) {
-    <app-error-message
-      [message]="errorMessage()"
-      (retry)="loadPopularMovies()"
-    />
+    <app-error-message [message]="errorMessage()" (retry)="loadPopularMovies()" />
   }
 
   @if (!isLoading() && !errorMessage()) {
-    <section class="movie-grid">
-      @for (movie of movies(); track movie.id) {
-        <app-media-card
-          [movie]="movie"
-        />
-      }
-    </section>
+    @if (movies().length > 0) {
+      <section class="movie-grid">
+        @for (movie of movies(); track movie.id) {
+          <app-media-card [movie]="movie" />
+        }
+      </section>
+    } @else {
+      <p class="empty-state">No popular movies are available right now. Please try again later.</p>
+    }
   }
 </section>

@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { switchMap, map, catchError, of } from 'rxjs';
@@ -74,6 +75,7 @@ export class DetailsPage {
           );
         }),
       )
+      .pipe(takeUntilDestroyed())
       .subscribe((result) => {
         this.details.set(result.details);
         this.errorMessage.set(result.error);

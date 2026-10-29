@@ -1,36 +1,22 @@
-
 <main class="details-page">
-  <button class="details-page__back" type="button" (click)="goBack()">
-    ← Back
-  </button>
+  <button class="details-page__back" type="button" (click)="goBack()">← Back</button>
 
   @if (isLoading()) {
     <app-loading-spinner message="Loading details..." />
   }
 
   @if (errorMessage()) {
-    <app-error-message
-      [message]="errorMessage()"
-      (retry)="loadDetails()"
-    />
+    <app-error-message [message]="errorMessage()" (retry)="loadDetails()" />
   }
 
   @if (details(); as item) {
     <article class="details">
       @if (item.backdropPath) {
-        <img
-          class="details__backdrop"
-          [src]="item.backdropPath | posterUrl: 'w1280'"
-          alt=""
-        />
+        <img class="details__backdrop" [src]="item.backdropPath | posterUrl: 'w1280'" alt="" />
       }
 
       <div class="details__content">
-        <img
-          class="details__poster"
-          [src]="item.posterPath | posterUrl"
-          [alt]="displayTitle()"
-        />
+        <img class="details__poster" [src]="item.posterPath | posterUrl" [alt]="displayTitle()" />
 
         <div class="details__info">
           <p class="details__type">
@@ -85,5 +71,8 @@
         </div>
       </div>
     </article>
+  }
+  @if (!isLoading() && !errorMessage() && !details()) {
+    <p class="details-page__empty">No details are available for this title.</p>
   }
 </main>

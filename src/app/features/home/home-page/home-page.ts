@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import { MovieApiService } from '../../../core/services/movie-api.service';
 import { Movie } from '../../../core/models/movie.model';
@@ -45,19 +46,23 @@ export class HomePage implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.movieApiService.getPopularMovies().subscribe({
-      next: (response) => {
-        this.movies.set(response.results);
-        this.isLoading.set(false);
-      },
+    this.movieApiService
+      .getPopularMovies()
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false);
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.movies.set(response.results);
+        },
 
-      error: (error) => {
-        console.error('FAILED TO LOAD MOVIES:', error);
+        error: (error) => {
+          console.error('FAILED TO LOAD MOVIES:', error);
 
-        this.errorMessage.set('Unable to load movies. Please try again.');
-
-        this.isLoading.set(false);
-      },
-    });
+          this.errorMessage.set('Unable to load movies. Please try again.');
+        },
+      });
   }
 }
