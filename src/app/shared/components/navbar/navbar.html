@@ -12,6 +12,17 @@
 
     <a routerLink="/search" routerLinkActive="navbar__link--active"> Search </a>
 
-    <a routerLink="/favorites" routerLinkActive="navbar__link--active"> Favorites </a>
+    <a routerLink="/favorites" routerLinkActive="navbar__link--active">
+      Favorites
+
+      @if (favoritesService.favoriteCount() > 0) {
+        <span
+          class="navbar__favorites-count"
+          [attr.aria-label]="favoritesService.favoriteCount() + ' saved items'"
+        >
+          {{ favoritesService.favoriteCount() }}
+        </span>
+      }
+    </a>
   </div>
 </nav>
