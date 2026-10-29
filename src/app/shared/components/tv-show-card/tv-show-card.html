@@ -1,9 +1,9 @@
-<a
-  class="tv-show-card"
-  [routerLink]="['/details', 'tv', tvShow().id]"
-  [attr.aria-label]="'View details for ' + tvShow().name"
->
-  <article class="tv-show-card">
+<article class="tv-show-card">
+  <a
+    class="tv-show-card__link"
+    [routerLink]="['/details', 'tv', tvShow().id]"
+    [attr.aria-label]="'View details for ' + tvShow().name"
+  >
     <img
       class="tv-show-card__poster"
       [src]="tvShow().posterPath | posterUrl"
@@ -30,5 +30,25 @@
         {{ tvShow().overview || 'No overview available.' }}
       </p>
     </div>
-  </article>
-</a>
+  </a>
+
+  <button
+    type="button"
+    class="tv-show-card__favorite"
+    [class.tv-show-card__favorite--active]="isFavorite()"
+    [attr.aria-pressed]="isFavorite()"
+    [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+    (click)="toggleFavorite($event)"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"
+        [attr.fill]="isFavorite() ? 'currentColor' : 'none'"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+</article>

@@ -1,21 +1,17 @@
 .tv-show-card {
-  display: block;
-  flex-direction: column;
+  position: relative;
   height: 100%;
   overflow: hidden;
-  border: 1px solid #e0e0e0;
-  border-radius: 0.75rem;
-  background: #fff;
+  border-radius: 12px;
+  background: #1c1c1c;
   color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease;
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  &__link {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
   }
 
   &__poster {
@@ -23,48 +19,95 @@
     width: 100%;
     aspect-ratio: 2 / 3;
     object-fit: cover;
-    background: #eee;
+    background: #252525;
   }
 
   &__info {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 0.5rem;
     padding: 1rem;
   }
 
   &__title {
-    margin: 0;
-    font-size: 1.15rem;
+    min-width: 0;
+    margin: 0 0 0.5rem;
+    padding-right: 2.75rem;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
     line-height: 1.4;
   }
 
-  &__rating,
-  &__release {
-    margin: 0;
-    font-size: 0.875rem;
+  &__rating {
+    margin: 0 0 0.5rem;
+    color: #ffd166;
+    font-size: 0.95rem;
+    font-weight: 600;
   }
 
   &__rating span {
-    color: #666;
+    color: #d1d1d1;
     font-size: 0.75rem;
+    font-weight: 400;
+  }
+
+  &__release {
+    margin: 0 0 0.75rem;
+    color: #aaa;
   }
 
   &__overview {
     display: -webkit-box;
-    overflow: hidden;
     margin: 0;
-    color: #555;
-    font-size: 0.9rem;
+    color: #ccc;
     line-height: 1.5;
+    overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
+  }
+
+  &__favorite {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 65%);
+    color: #fff;
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+
+    svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+    }
+
+    &:hover {
+      color: #e63946;
+      transform: scale(1.08);
+    }
+
+    &--active {
+      color: #e63946;
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+    }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tv-show-card {
+  .tv-show-card__favorite {
     transition: none;
 
     &:hover {

@@ -1,1 +1,20 @@
-<p>favorites-page works!</p>
+<section class="favorites-page">
+  <h1>My Favorites</h1>
+
+  @if (favoritesService.favorites().length === 0) {
+    <p class="favorites-page__empty">You haven't added any favorites yet.</p>
+  } @else {
+    <div class="favorites-page__grid">
+      @for (
+        favorite of favoritesService.favorites();
+        track favorite.mediaType + '-' + favorite.id
+      ) {
+        @if (favorite.mediaType === 'movie') {
+          <app-media-card [movie]="favorite" />
+        } @else {
+          <app-tv-show-card [tvShow]="favorite" />
+        }
+      }
+    </div>
+  }
+</section>

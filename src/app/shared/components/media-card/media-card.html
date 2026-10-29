@@ -16,7 +16,10 @@
         <h2>{{ movie().title }}</h2>
       </div>
 
-      <p class="media-card__rating">⭐ {{ movie().voteAverage.toFixed(1) }}</p>
+      <p class="media-card__rating">
+        ⭐ {{ movie().voteAverage.toFixed(1) }}
+        <span>({{ movie().voteCount }} votes)</span>
+      </p>
 
       <p class="media-card__release">
         {{ movie().releaseDate || 'Release date unknown' }}
