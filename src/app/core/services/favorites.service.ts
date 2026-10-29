@@ -55,7 +55,24 @@ export class FavoritesService {
 
       const stored = localStorage.getItem(STORAGE_KEY);
 
-      return stored ? (JSON.parse(stored) as FavoriteMedia[]) : [];
+      if (!stored) {
+        return [];
+      }
+
+      const parsed: unknown = JSON.parse(stored);
+
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+
+      return parsed.filter(
+        (item): item is FavoriteMedia =>
+          item !== null &&
+          typeof item === 'object' &&
+          typeof item.id === 'number' &&
+          Number.isFinite(item.id) &&
+          (item.mediaType === 'movie' || item.mediaType === 'tv'),
+      );
     } catch {
       return [];
     }

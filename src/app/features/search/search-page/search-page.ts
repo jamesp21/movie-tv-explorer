@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { finalize } from 'rxjs';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { finalize, Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { MovieApiService } from '../../../core/services/movie-api.service';
@@ -23,6 +23,10 @@ import { TvShowCard } from '../../../shared/components/tv-show-card/tv-show-card
 export class SearchPage {
   private readonly movieApiService = inject(MovieApiService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private searchSubscription?: Subscription;
 
   readonly movies = signal<Movie[]>([]);
   readonly tvShows = signal<TVShow[]>([]);
@@ -32,11 +36,19 @@ export class SearchPage {
   readonly searchQuery = signal('');
 
   constructor() {
-    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const query = params.get('q');
 
-      if (query) {
-        this.onSearch(query);
+      if (query?.trim()) {
+        this.performSearch(query.trim());
+      } else {
+        this.searchSubscription?.unsubscribe();
+        this.searchQuery.set('');
+        this.movies.set([]);
+        this.tvShows.set([]);
+        this.hasSearched.set(false);
+        this.isLoading.set(false);
+        this.errorMessage.set('');
       }
     });
   }
@@ -53,16 +65,31 @@ export class SearchPage {
       return;
     }
 
-    this.searchQuery.set(trimmedQuery);
+    if (trimmedQuery === this.searchQuery()) {
+      return;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: trimmedQuery },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private performSearch(query: string): void {
+    this.searchSubscription?.unsubscribe();
+
+    this.searchQuery.set(query);
     this.hasSearched.set(true);
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.movies.set([]);
     this.tvShows.set([]);
 
-    this.movieApiService
-      .searchMulti(trimmedQuery)
+    this.searchSubscription = this.movieApiService
+      .searchMulti(query)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.isLoading.set(false);
         }),

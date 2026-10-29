@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -21,6 +21,7 @@ export class DetailsPage {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly movieApiService = inject(MovieApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly details = signal<MediaDetails | null>(null);
   readonly isLoading = signal(true);
@@ -75,7 +76,7 @@ export class DetailsPage {
           );
         }),
       )
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         this.details.set(result.details);
         this.errorMessage.set(result.error);
