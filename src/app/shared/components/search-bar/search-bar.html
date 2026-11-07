@@ -1,6 +1,8 @@
-
 <form class="search-bar" (submit)="onSearch($event)">
+  <label class="search-bar__label" for="media-search"> Search movies and TV shows </label>
+
   <input
+    id="media-search"
     type="search"
     placeholder="Search movies and TV shows..."
     [value]="query()"

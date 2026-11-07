@@ -4,14 +4,14 @@
     <p>Find your next movie or show to watch.</p>
   </header>
 
-  <app-search-bar (searchSubmitted)="onSearch($event)" />
+  <app-search-bar [(query)]="searchQuery" (searchSubmitted)="onSearch($event)" />
 
   @if (isLoading()) {
     <app-loading-spinner message="Searching movies and TV shows..." />
   }
 
   @if (errorMessage()) {
-    <app-error-message [message]="errorMessage()" (retry)="onSearch(searchQuery())" />
+    <app-error-message [message]="errorMessage()" (retry)="retrySearch()" />
   }
 
   @if (hasSearched() && !isLoading() && !errorMessage()) {

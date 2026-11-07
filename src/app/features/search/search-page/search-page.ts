@@ -62,10 +62,19 @@ export class SearchPage {
     const trimmedQuery = query.trim();
 
     if (!trimmedQuery) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { q: null },
+        queryParamsHandling: 'merge',
+      });
       return;
     }
 
-    if (trimmedQuery === this.searchQuery()) {
+    if (trimmedQuery === this.route.snapshot.queryParamMap.get('q')) {
+      if (this.errorMessage()) {
+        this.performSearch(trimmedQuery);
+      }
+
       return;
     }
 
@@ -74,6 +83,14 @@ export class SearchPage {
       queryParams: { q: trimmedQuery },
       queryParamsHandling: 'merge',
     });
+  }
+
+  retrySearch(): void {
+    const query = this.searchQuery();
+
+    if (query) {
+      this.performSearch(query);
+    }
   }
 
   private performSearch(query: string): void {
