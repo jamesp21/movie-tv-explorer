@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { switchMap, map, catchError, of } from 'rxjs';
+import { catchError, map, merge, of, Subject, switchMap } from 'rxjs';
 
 import { MovieApiService } from '../../../core/services/movie-api.service';
 import { MediaDetails } from '../../../core/models/media-details.model';
@@ -23,6 +23,8 @@ export class DetailsPage {
   private readonly movieApiService = inject(MovieApiService);
   private readonly destroyRef = inject(DestroyRef);
 
+  private readonly retry$ = new Subject<void>();
+
   readonly details = signal<MediaDetails | null>(null);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
@@ -35,21 +37,17 @@ export class DetailsPage {
   });
 
   constructor() {
-    this.loadDetails();
-  }
-
-  loadDetails(): void {
-    this.isLoading.set(true);
-    this.errorMessage.set('');
-    this.details.set(null);
-
-    this.route.paramMap
+    merge(this.route.paramMap, this.retry$.pipe(map(() => this.route.snapshot.paramMap)))
       .pipe(
         map((params) => ({
           type: params.get('type'),
           id: Number(params.get('id')),
         })),
         switchMap(({ type, id }) => {
+          this.isLoading.set(true);
+          this.errorMessage.set('');
+          this.details.set(null);
+
           if ((type !== 'movie' && type !== 'tv') || !Number.isInteger(id) || id <= 0) {
             return of({
               details: null,
@@ -65,9 +63,13 @@ export class DetailsPage {
               : this.movieApiService.getTvDetails(id);
 
           return request.pipe(
-            map((details) => ({ details, error: '' })),
+            map((details) => ({
+              details,
+              error: '',
+            })),
             catchError((error) => {
               console.error('FAILED TO LOAD DETAILS:', error);
+
               return of({
                 details: null,
                 error: 'Unable to load details. Please try again.',
@@ -75,13 +77,17 @@ export class DetailsPage {
             }),
           );
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         this.details.set(result.details);
         this.errorMessage.set(result.error);
         this.isLoading.set(false);
       });
+  }
+
+  loadDetails(): void {
+    this.retry$.next();
   }
 
   goBack(): void {

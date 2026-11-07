@@ -1,4 +1,7 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, ApplicationRef, computed, inject, signal } from '@angular/core';
+
+import { filter, take } from 'rxjs';
+
 import { Movie } from '../models/movie.model';
 import { TVShow } from '../models/tv-show.model';
 
@@ -10,11 +13,22 @@ const STORAGE_KEY = 'movie-tv-explorer-favorites';
   providedIn: 'root',
 })
 export class FavoritesService {
-  private readonly favoritesState = signal<FavoriteMedia[]>(this.loadFavorites());
+  private readonly favoritesState = signal<FavoriteMedia[]>([]);
 
   readonly favorites = this.favoritesState.asReadonly();
 
   readonly favoriteCount = computed(() => this.favoritesState().length);
+
+  constructor() {
+    inject(ApplicationRef)
+      .isStable.pipe(
+        filter((isStable) => isStable),
+        take(1),
+      )
+      .subscribe(() => {
+        this.favoritesState.set(this.loadFavorites());
+      });
+  }
 
   isFavorite(id: number, mediaType: 'movie' | 'tv'): boolean {
     return this.favoritesState().some((item) => item.id === id && item.mediaType === mediaType);
