@@ -183,6 +183,30 @@ describe('MovieApiService', () => {
     request.flush(mockResponse);
   });
 
+  it('should propagate errors when movie search fails', () => {
+    let receivedError: unknown;
+
+    service.searchMovies('Batman').subscribe({
+      error: (error) => {
+        receivedError = error;
+      },
+    });
+
+    const request = httpMock.expectOne(
+      (request) =>
+        request.url === `${environment.tmdb.apiUrl}/search/movie` &&
+        request.params.get('query') === 'Batman',
+    );
+
+    request.flush('Server error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    });
+
+    expect(receivedError).toBeTruthy();
+    expect((receivedError as { status: number }).status).toBe(500);
+  });
+
   it('should search TV shows and map the response', () => {
     const mockResponse = {
       page: 1,
@@ -234,6 +258,30 @@ describe('MovieApiService', () => {
     expect(request.request.method).toBe('GET');
 
     request.flush(mockResponse);
+  });
+
+  it('should propagate errors when TV show search fails', () => {
+    let receivedError: unknown;
+
+    service.searchTvShows('Breaking Bad').subscribe({
+      error: (error) => {
+        receivedError = error;
+      },
+    });
+
+    const request = httpMock.expectOne(
+      (request) =>
+        request.url === `${environment.tmdb.apiUrl}/search/tv` &&
+        request.params.get('query') === 'Breaking Bad',
+    );
+
+    request.flush('Server error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    });
+
+    expect(receivedError).toBeTruthy();
+    expect((receivedError as { status: number }).status).toBe(500);
   });
 
   it('should search movies and TV shows together', () => {
@@ -390,6 +438,26 @@ describe('MovieApiService', () => {
     request.flush(mockResponse);
   });
 
+  it('should propagate errors when retrieving movie details fails', () => {
+    let receivedError: unknown;
+
+    service.getMovieDetails(123).subscribe({
+      error: (error) => {
+        receivedError = error;
+      },
+    });
+
+    const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/movie/123`);
+
+    request.flush('Server error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    });
+
+    expect(receivedError).toBeTruthy();
+    expect((receivedError as { status: number }).status).toBe(500);
+  });
+
   it('should retrieve TV show details and map the response', () => {
     const mockResponse = {
       id: 456,
@@ -446,6 +514,26 @@ describe('MovieApiService', () => {
     expect(request.request.method).toBe('GET');
 
     request.flush(mockResponse);
+  });
+
+  it('should propagate errors when retrieving TV show details fails', () => {
+    let receivedError: unknown;
+
+    service.getTvDetails(456).subscribe({
+      error: (error) => {
+        receivedError = error;
+      },
+    });
+
+    const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/tv/456`);
+
+    request.flush('Server error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    });
+
+    expect(receivedError).toBeTruthy();
+    expect((receivedError as { status: number }).status).toBe(500);
   });
 
   it('should propagate errors when retrieving popular movies fails', () => {
