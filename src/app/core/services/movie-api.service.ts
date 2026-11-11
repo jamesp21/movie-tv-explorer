@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
@@ -87,10 +87,20 @@ export class MovieApiService {
     tvShows: TVShow[];
     totalResults: number;
   }> {
+    const trimmedQuery = query.trim();
+
+    if (!trimmedQuery) {
+      return of({
+        movies: [],
+        tvShows: [],
+        totalResults: 0,
+      });
+    }
+
     return this.http
       .get<MultiSearchApiResponse>(`${this.apiUrl}/search/multi`, {
         params: {
-          query: query.trim(),
+          query: trimmedQuery,
           include_adult: false,
           language: 'en-US',
           page: 1,

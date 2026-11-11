@@ -324,6 +324,10 @@ describe('MovieApiService', () => {
           vote_count: 300,
           original_language: 'en',
         },
+        {
+          id: 333,
+          media_type: 'person',
+        },
       ],
       total_pages: 2,
       total_results: 20,
@@ -351,6 +355,40 @@ describe('MovieApiService', () => {
     expect(request.request.params.get('page')).toBe('1');
 
     request.flush(mockResponse);
+  });
+
+  it('should return empty results without making a request for a blank multi-search query', () => {
+    service.searchMulti('   ').subscribe((response) => {
+      expect(response).toEqual({
+        movies: [],
+        tvShows: [],
+        totalResults: 0,
+      });
+    });
+
+    httpMock.expectNone(`${environment.tmdb.apiUrl}/search/multi`);
+  });
+
+  it('should propagate errors when multi-search request fails', () => {
+    let errorResponse: unknown;
+
+    service.searchMulti('batman').subscribe({
+      error: (error) => {
+        errorResponse = error;
+      },
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.tmdb.apiUrl}/search/multi?query=batman&include_adult=false&language=en-US&page=1`,
+    );
+
+    req.flush('Server error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    });
+
+    expect(errorResponse).toBeTruthy();
+    expect((errorResponse as { status: number }).status).toBe(500);
   });
 
   it('should retrieve movie details and map the response', () => {
@@ -463,5 +501,40 @@ describe('MovieApiService', () => {
     expect(request.request.method).toBe('GET');
 
     request.flush(mockResponse);
+  });
+
+  it('should propagate errors when retrieving popular movies fails', () => {
+    let receivedError: unknown;
+
+    service.getPopularMovies().subscribe({
+      next: () => {
+        throw new Error('Expected the request to fail');
+      },
+      error: (error) => {
+        receivedError = error;
+      },
+    });
+
+    const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/movie/popular`);
+
+    request.flush('Server error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    });
+
+    expect(receivedError).toBeTruthy();
+    expect((receivedError as { status: number }).status).toBe(500);
+  });
+
+  it('should return empty results without making a request for a blank multi-search query', () => {
+    service.searchMulti('   ').subscribe((response) => {
+      expect(response).toEqual({
+        movies: [],
+        tvShows: [],
+        totalResults: 0,
+      });
+    });
+
+    httpMock.expectNone(`${environment.tmdb.apiUrl}/search/multi`);
   });
 });
