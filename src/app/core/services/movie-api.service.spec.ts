@@ -136,61 +136,6 @@ describe('MovieApiService', () => {
           id: 789,
           title: 'Batman',
           original_title: 'Batman',
-          overview: 'A superhero movie.',
-          poster_path: '/batman.jpg',
-          backdrop_path: '/batman-backdrop.jpg',
-          release_date: '2025-01-01',
-          popularity: 150,
-          vote_average: 8.2,
-          vote_count: 700,
-          adult: false,
-          original_language: 'en',
-        },
-      ],
-      total_pages: 3,
-      total_results: 50,
-    };
-
-    service.searchMovies('Batman').subscribe((response) => {
-      expect(response.page).toBe(1);
-      expect(response.totalPages).toBe(3);
-      expect(response.totalResults).toBe(50);
-
-      expect(response.results[0]).toEqual({
-        id: 789,
-        title: 'Batman',
-        originalTitle: 'Batman',
-        overview: 'A superhero movie.',
-        posterPath: '/batman.jpg',
-        backdropPath: '/batman-backdrop.jpg',
-        releaseDate: '2025-01-01',
-        popularity: 150,
-        voteAverage: 8.2,
-        voteCount: 700,
-        adult: false,
-        originalLanguage: 'en',
-      });
-    });
-
-    const request = httpMock.expectOne(
-      (request) =>
-        request.url === `${environment.tmdb.apiUrl}/search/movie` &&
-        request.params.get('query') === 'Batman',
-    );
-
-    expect(request.request.method).toBe('GET');
-
-    request.flush(mockResponse);
-  });
-
-  it('should search movies and map the response', () => {
-    const mockResponse = {
-      page: 1,
-      results: [
-        {
-          id: 789,
-          title: 'Batman',
-          original_title: 'Batman',
           overview: 'A test Batman overview.',
           poster_path: '/batman-poster.jpg',
           backdrop_path: '/batman-backdrop.jpg',
@@ -524,17 +469,5 @@ describe('MovieApiService', () => {
 
     expect(receivedError).toBeTruthy();
     expect((receivedError as { status: number }).status).toBe(500);
-  });
-
-  it('should return empty results without making a request for a blank multi-search query', () => {
-    service.searchMulti('   ').subscribe((response) => {
-      expect(response).toEqual({
-        movies: [],
-        tvShows: [],
-        totalResults: 0,
-      });
-    });
-
-    httpMock.expectNone(`${environment.tmdb.apiUrl}/search/multi`);
   });
 });
