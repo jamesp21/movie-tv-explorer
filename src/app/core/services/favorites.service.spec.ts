@@ -218,4 +218,29 @@ describe('FavoritesService', () => {
     expect(service.isFavorite(movie.id, 'movie')).toBe(true);
     expect(service.isFavorite(tvShow.id, 'tv')).toBe(true);
   });
+
+  it('should handle localStorage read failures', () => {
+    TestBed.resetTestingModule();
+
+    const storageSpy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('Storage unavailable');
+    });
+
+    TestBed.configureTestingModule({
+      providers: [
+        FavoritesService,
+        {
+          provide: ApplicationRef,
+          useValue: { isStable: of(true) },
+        },
+      ],
+    });
+
+    service = TestBed.inject(FavoritesService);
+
+    expect(service.favorites()).toEqual([]);
+    expect(service.favoriteCount()).toBe(0);
+
+    storageSpy.mockRestore();
+  });
 });
