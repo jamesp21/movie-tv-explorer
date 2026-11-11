@@ -9,6 +9,65 @@ export type FavoriteMedia = (Movie & { mediaType: 'movie' }) | (TVShow & { media
 
 const STORAGE_KEY = 'movie-tv-explorer-favorites';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isValidMovieFavorite(item: Record<string, unknown>): boolean {
+  return (
+    item['mediaType'] === 'movie' &&
+    typeof item['id'] === 'number' &&
+    Number.isSafeInteger(item['id']) &&
+    item['id'] > 0 &&
+    typeof item['title'] === 'string' &&
+    typeof item['originalTitle'] === 'string' &&
+    typeof item['overview'] === 'string' &&
+    (typeof item['posterPath'] === 'string' || item['posterPath'] === null) &&
+    (typeof item['backdropPath'] === 'string' || item['backdropPath'] === null) &&
+    typeof item['releaseDate'] === 'string' &&
+    typeof item['popularity'] === 'number' &&
+    Number.isFinite(item['popularity']) &&
+    typeof item['voteAverage'] === 'number' &&
+    Number.isFinite(item['voteAverage']) &&
+    typeof item['voteCount'] === 'number' &&
+    Number.isSafeInteger(item['voteCount']) &&
+    item['voteCount'] >= 0 &&
+    typeof item['adult'] === 'boolean' &&
+    typeof item['originalLanguage'] === 'string'
+  );
+}
+
+function isValidTvFavorite(item: Record<string, unknown>): boolean {
+  return (
+    item['mediaType'] === 'tv' &&
+    typeof item['id'] === 'number' &&
+    Number.isSafeInteger(item['id']) &&
+    item['id'] > 0 &&
+    typeof item['name'] === 'string' &&
+    typeof item['originalName'] === 'string' &&
+    typeof item['overview'] === 'string' &&
+    (typeof item['posterPath'] === 'string' || item['posterPath'] === null) &&
+    (typeof item['backdropPath'] === 'string' || item['backdropPath'] === null) &&
+    typeof item['firstAirDate'] === 'string' &&
+    typeof item['popularity'] === 'number' &&
+    Number.isFinite(item['popularity']) &&
+    typeof item['voteAverage'] === 'number' &&
+    Number.isFinite(item['voteAverage']) &&
+    typeof item['voteCount'] === 'number' &&
+    Number.isSafeInteger(item['voteCount']) &&
+    item['voteCount'] >= 0 &&
+    typeof item['originalLanguage'] === 'string'
+  );
+}
+
+function isFavoriteMedia(item: unknown): item is FavoriteMedia {
+  if (!isRecord(item)) {
+    return false;
+  }
+
+  return isValidMovieFavorite(item) || isValidTvFavorite(item);
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -79,14 +138,7 @@ export class FavoritesService {
         return [];
       }
 
-      return parsed.filter(
-        (item): item is FavoriteMedia =>
-          item !== null &&
-          typeof item === 'object' &&
-          typeof item.id === 'number' &&
-          Number.isFinite(item.id) &&
-          (item.mediaType === 'movie' || item.mediaType === 'tv'),
-      );
+      return parsed.filter(isFavoriteMedia);
     } catch {
       return [];
     }
