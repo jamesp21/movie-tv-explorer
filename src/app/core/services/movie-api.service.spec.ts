@@ -438,6 +438,32 @@ describe('MovieApiService', () => {
     request.flush(mockResponse);
   });
 
+  it('should use default values when optional movie details are missing', () => {
+    const mockResponse = {
+      id: 789,
+      title: 'Minimal Movie',
+      poster_path: null,
+      backdrop_path: null,
+    };
+
+    service.getMovieDetails(789).subscribe((movie) => {
+      expect(movie.id).toBe(789);
+      expect(movie.overview).toBe('');
+      expect(movie.popularity).toBe(0);
+      expect(movie.voteAverage).toBe(0);
+      expect(movie.voteCount).toBe(0);
+      expect(movie.originalLanguage).toBe('');
+      expect(movie.genres).toEqual([]);
+      expect(movie.productionCompanies).toEqual([]);
+    });
+
+    const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/movie/789`);
+
+    expect(request.request.method).toBe('GET');
+
+    request.flush(mockResponse);
+  });
+
   it('should propagate errors when retrieving movie details fails', () => {
     let receivedError: unknown;
 
@@ -510,6 +536,32 @@ describe('MovieApiService', () => {
     });
 
     const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/tv/456`);
+
+    expect(request.request.method).toBe('GET');
+
+    request.flush(mockResponse);
+  });
+
+  it('should use default values when optional TV show details are missing', () => {
+    const mockResponse = {
+      id: 789,
+      name: 'Minimal TV Show',
+      poster_path: null,
+      backdrop_path: null,
+    };
+
+    service.getTvDetails(789).subscribe((show) => {
+      expect(show.id).toBe(789);
+      expect(show.overview).toBe('');
+      expect(show.popularity).toBe(0);
+      expect(show.voteAverage).toBe(0);
+      expect(show.voteCount).toBe(0);
+      expect(show.originalLanguage).toBe('');
+      expect(show.genres).toEqual([]);
+      expect(show.productionCompanies).toEqual([]);
+    });
+
+    const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/tv/789`);
 
     expect(request.request.method).toBe('GET');
 
