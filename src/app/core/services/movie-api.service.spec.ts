@@ -183,6 +183,31 @@ describe('MovieApiService', () => {
     request.flush(mockResponse);
   });
 
+  it('should return an empty array when movie search has no results', () => {
+    const mockResponse = {
+      page: 1,
+      results: [],
+      total_pages: 0,
+      total_results: 0,
+    };
+
+    service.searchMovies('NonexistentMovie').subscribe((response) => {
+      expect(response.results).toEqual([]);
+      expect(response.totalResults).toBe(0);
+      expect(response.totalPages).toBe(0);
+    });
+
+    const request = httpMock.expectOne(
+      (request) =>
+        request.url === `${environment.tmdb.apiUrl}/search/movie` &&
+        request.params.get('query') === 'NonexistentMovie',
+    );
+
+    expect(request.request.method).toBe('GET');
+
+    request.flush(mockResponse);
+  });
+
   it('should propagate errors when movie search fails', () => {
     let receivedError: unknown;
 
@@ -253,6 +278,31 @@ describe('MovieApiService', () => {
       (request) =>
         request.url === `${environment.tmdb.apiUrl}/search/tv` &&
         request.params.get('query') === 'Breaking Bad',
+    );
+
+    expect(request.request.method).toBe('GET');
+
+    request.flush(mockResponse);
+  });
+
+  it('should return an empty array when TV show search has no results', () => {
+    const mockResponse = {
+      page: 1,
+      results: [],
+      total_pages: 0,
+      total_results: 0,
+    };
+
+    service.searchTvShows('NonexistentShow').subscribe((response) => {
+      expect(response.results).toEqual([]);
+      expect(response.totalResults).toBe(0);
+      expect(response.totalPages).toBe(0);
+    });
+
+    const request = httpMock.expectOne(
+      (request) =>
+        request.url === `${environment.tmdb.apiUrl}/search/tv` &&
+        request.params.get('query') === 'NonexistentShow',
     );
 
     expect(request.request.method).toBe('GET');
@@ -601,6 +651,26 @@ describe('MovieApiService', () => {
     });
 
     const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/movie/popular`);
+
+    request.flush('Server error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    });
+
+    expect(receivedError).toBeTruthy();
+    expect((receivedError as { status: number }).status).toBe(500);
+  });
+
+  it('should propagate errors when retrieving popular TV shows fails', () => {
+    let receivedError: unknown;
+
+    service.getPopularTvShows().subscribe({
+      error: (error) => {
+        receivedError = error;
+      },
+    });
+
+    const request = httpMock.expectOne(`${environment.tmdb.apiUrl}/tv/popular`);
 
     request.flush('Server error', {
       status: 500,
