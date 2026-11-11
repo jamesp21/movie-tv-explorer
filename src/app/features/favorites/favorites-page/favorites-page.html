@@ -1,5 +1,8 @@
 <section class="favorites-page">
-  <h1>My Favorites</h1>
+  <header class="favorites-page__header">
+    <h1>My Favorites</h1>
+    <p>All the movies and TV shows you've saved.</p>
+  </header>
 
   @if (favoritesService.favorites().length === 0) {
     <p class="favorites-page__empty">You haven't added any favorites yet.</p>

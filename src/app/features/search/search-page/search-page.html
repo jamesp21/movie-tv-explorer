@@ -3,7 +3,6 @@
     <h1>Search Movies & TV Shows</h1>
     <p>Find your next movie or show to watch.</p>
   </header>
-
   <app-search-bar [(query)]="searchQuery" (searchSubmitted)="onSearch($event)" />
 
   @if (isLoading()) {

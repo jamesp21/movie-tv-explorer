@@ -1,8 +1,8 @@
-
 .search-page {
-  padding: 2rem;
+  width: calc(100% - 2rem);
   max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem 0;
 }
 
 .search-page__header {
@@ -13,16 +13,25 @@
   }
 
   p {
-    opacity: 0.75;
+    margin: 0;
   }
 }
 
+app-search-bar {
+  display: block;
+  margin-bottom: 2.5rem;
+}
+
 .search-page__section {
-  margin-top: 2.5rem;
+  margin-top: 0;
 
   h2 {
     margin-bottom: 1rem;
   }
+}
+
+.search-page__section + .search-page__section {
+  margin-top: 2.5rem;
 }
 
 .search-page__grid {
@@ -31,26 +40,12 @@
   gap: 1.5rem;
 }
 
-.search-page__tv-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-  padding: 0;
-  list-style: none;
-
-  li {
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 0.75rem;
-  }
-
-  h3 {
-    margin-top: 0;
-  }
+.search-page__empty {
+  padding: 1rem 0;
 }
 
 @media (max-width: 600px) {
   .search-page {
-    padding: 1rem;
+    padding: 1.5rem 0;
   }
 }
